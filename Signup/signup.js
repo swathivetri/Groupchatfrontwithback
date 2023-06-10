@@ -7,8 +7,7 @@ async function signup(e) {
             name: e.target.name.value,
             email: e.target.email.value,
             password: e.target.password.value,
-            mobile: e.target.mobile.value
-
+            number: e.target.number.value
 
         }
         console.log(signupDetails)

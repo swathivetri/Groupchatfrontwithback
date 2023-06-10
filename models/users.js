@@ -15,14 +15,14 @@ const User = sequelize.define('user', {
        allowNull: false,
        unique: true
     },
-    number:{
-        type:Sequelize.STRING,
-        allowNull:false
-      },
       password:{
         type:Sequelize.STRING,
-        allowNull:false
+        allowNull: false
       }, 
+      number:{
+        type:Sequelize.STRING,
+        allowNull: false
+      }
 });
 
 module.exports = User;

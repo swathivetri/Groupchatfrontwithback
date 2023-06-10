@@ -2,7 +2,7 @@ async function login(e) {
     try{
     e.preventDefault();
     console.log(e.target.name);
-    const form = new FormData(e.target);
+   
 
     const loginDetails = {
         email: e.target.email.value,
@@ -14,9 +14,8 @@ async function login(e) {
     if(response.status === 200){
             alert(response.data.message)
             console.log(response.data)
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('userDetails', JSON.stringify(response.data.user))
-           
+            localStorage.setItem( response.data);
+            
     }else {
         throw new Error('Failed to login')
     }
