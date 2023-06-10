@@ -1,7 +1,8 @@
 const path = require('path');
 
 const express = require('express');
-var cors = require('cors')
+const cors = require('cors')
+
 
 const app = express();
 const dotenv = require('dotenv');
@@ -21,6 +22,7 @@ const userRoutes = require('./routes/user')
 
 app.use(cors());
 
+
 // app.use(bodyParser.urlencoded());  ////this is for handling forms
 app.use(express.json());  //this is for handling jsons
 
@@ -31,12 +33,14 @@ app.use('/user', userRoutes)
   //  console.log('urlll', req.url);
 //res.sendFile(path.join(__dirname, 'Login/login.html'));
 //})
-
+app.get("/data",(req,res) => {
+    res.json({name:"swathi",favouriteFood:"rice"})
+})
 
 
 sequelize.sync()
     .then(() => {
-        app.listen(3000);
+        app.listen(3000)
     })
     .catch(err => {
         console.log(err);
