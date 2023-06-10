@@ -6,8 +6,10 @@ async function signup(e) {
         const signupDetails = {
             name: e.target.name.value,
             email: e.target.email.value,
-            password: e.target.password.value,
-            number: e.target.number.value
+            number: e.target.number.value,
+            password: e.target.password.value
+
+           
 
         }
         console.log(signupDetails)
