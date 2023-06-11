@@ -62,10 +62,59 @@ const login = async (req, res) => {
     }
 }
 
+const AddNewUser=(async(req,res)=>{
+    console.log("i am here"+req.user.id+" "+req.query.groupid);
+    try {
+        // const result = await usertable.findAll({
+        //     include: [
+        //       {
+        //         model: usergrouptable,
+        //         where: { grouptableId: `${req.query.groupid}` },
+        //         attributes: ['tbluserdetailId'],
+        //         required: false
+        //       }
+        //     ],
+        //     where: {
+        //       '$usergroups.tbluserdetailId$': { [sequelize.Op.ne]: null }
+        //     }
+        //   });
+    
+
+        
+        const result = await usertable.findAll({
+            where: {
+              id: {
+                [Op.notIn]: sequelize.literal(`
+                  (SELECT tbluserdetailId
+                  FROM usergroups
+                  WHERE grouptableId = ${req.query.groupid}
+                )`)
+              }
+            },
+            include: [{
+              model: usergrouptable,
+            //    where: { grouptableId: 19 },
+              attributes: []
+            }]
+          });
+          
+          
+          
+          
+          
+          console.log(result);
+          res.send({success:true,userDetail:result});
+    } catch (error) {
+        console.log(error);
+    }
+   
+ })
+
 
 module.exports = {
     signup,
     login,
-    generateAccessToken
+    generateAccessToken,
+    AddNewUser
 
 }

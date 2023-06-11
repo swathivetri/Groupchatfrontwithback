@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Group Messaging</title>
+    <link rel="stylesheet" href="group.css">
+  </head>
+  <body>
+    <header>
+      <h1>Group Messaging</h1>
+    </header>
+    <div id="container">
+      <div id="groups">
+        <h2>My Groups</h2>
+        <ul id="showgroup">
+          <!-- <li><a href="#">Group 1</a></li>
+          <li><a href="#">Group 2</a></li>
+          <li><a href="#">Group 3</a></li> -->
+          
+        </ul>
+        <button id="create-group-btn">Create Group</button>
+      </div>
+      <div id="chat">
+        <p id="groupnameId" style="font-size: large; font-weight: bold;">Group Name</p>
+        <div id="message-list" style="font-size: large; font-weight: bold;"></div>
+        <form id="message-form">
+          <input type="text" id="message-input" placeholder="Type your message here...">
+          <button type="submit" id="send-btn">Send</button>
+        </form>
+      </div>
+    </div>
+    <div id="modal">
+      <div id="create-group-form">  
+        <h2>Create Group</h2>
+        <form>
+          <label for="group-name">Group Name:</label>
+          <input type="text" id="group-name" required>
+          <label for="members">Add Members:</label>
+          <input type="text" id="members">
+          <div id="user-list">
+            <h2>User List</h2>
+            <ul id="user-list-container">
+            </ul>
+          </div>
+          <button type="submit" id="create-group-submit">Create</button>
+          <button type="button" id="close-btn">Close</button>
+        </form> 
+      </div>
+    </div>
+   
+  </body>
+
+  <script src="groupPage.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</html>

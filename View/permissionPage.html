@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>User Group Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <style>
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    input[type="checkbox"] {
+      margin-right: 10px;
+    }
+    button {
+      margin-top: 10px;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+  </style>
+  </head>
+  <body>
+    <div class="container">
+      <form>
+        <div class="form-group">
+          <label for="groupname">Group Name:</label>
+          <input type="text" class="form-control" id="groupname" name="groupname">
+        </div>
+        <div class="form-group">
+          <label for="userlist">User List:</label>
+          <ul id="userlist" class="list-group">
+            <li class="list-group-item">
+              <input type="checkbox" name="" id="">
+              User 1
+            </li>
+            <li class="list-group-item">
+              <input type="checkbox" name="" id="">
+              User 2
+            </li>
+            <li class="list-group-item">
+              <input type="checkbox" name="" id="">
+              User 3
+            </li>
+            <!-- Add more list items as needed -->
+          </ul>
+        </div>
+        <button type="button" class="btn btn-primary" id="edit-btn">Add Users</button>
+        <button type="button" class="btn btn-danger" id="remove-btn">Remove Users</button>
+        <button type="button" class="btn btn-warning" id="make-admin">Admin</button>
+        <button type="submit" class="btn btn-success" id="save-btn">Save Changes</button>
+        <button type="button" class="btn btn-secondary" id="user-remove-btn">Remove User</button>
+      </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"></script>
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIE"></script> -->
+
+
+
+
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+
+      const userList = document.querySelector('#userlist');
+      const editBtn = document.querySelector('#edit-btn');
+      const removeBtn = document.querySelector('#remove-btn');
+      const saveBtn = document.querySelector('#save-btn');
+      const userRemoveBtn = document.querySelector('#user-remove-btn');
+      const admin = document.querySelector('#make-admin');
+      
+
+      var isEditBtnClicked = false;
+      var isRemoveBtnClicked = false;
+      var isRemoveBtnClicked = false;
+
+      const fetchData = async (url) => {
+        const token=localStorage.getItem('token');
+        const response = await axios.get(url,{
+                  headers: {
+                    'Authorization':token
+                  }
+                });
+        return response.data.userDetail;
+      };
+
+      const populateUserList = async (userDetail) => {
+        userList.innerHTML = '';
+        for (let i = 0; i < userDetail.length; i++) {
+          
+          const listItem = document.createElement('li');
+          listItem.classList.add("list-group-item");
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.name = 'user';
+          checkbox.value = userDetail[i].id;
+          const label = document.createElement('label');
+          label.htmlFor = userDetail[i].id;
+          label.textContent = userDetail[i].username;
+          listItem.appendChild(checkbox);
+          listItem.appendChild(label);
+          userList.appendChild(listItem);
+        }
+      };
+
+      editBtn.addEventListener('click', async () => {
+         isEditBtnClicked=true;
+         isRemoveBtnClicked=false
+         isAdminBtnClicked = false;
+        //  console.log('userid'+token)
+        const userDetail = await fetchData(`http://localhost:3000/AddNewUser?groupid=${localStorage.getItem('groupid')}`);
+        populateUserList(userDetail);
+      });
+
+      removeBtn.addEventListener('click', async () => {
+         isEditBtnClicked = false;
+         isAdminBtnClicked = false;
+         isRemoveBtnClicked = true
+        const userDetail = await fetchData(`http://localhost:3000/fetchGroupUser?groupid=${localStorage.getItem('groupid')}`)
+        populateUserList(userDetail);    
+
+      })
+
+      admin.addEventListener('click', async () => {
+        isEditBtnClicked = false;
+        isRemoveBtnClicked = false;
+        isAdminBtnClicked = true;
+        const userdetail = await fetchData(`http://localhost:3000/fetchGroupAdmin?groupid=${localStorage.getItem('groupid')}`)
+        populateUserList(userdetail);
+        
+      })
+
+
+
+
+      // // fetch user list data from server and populate userlist div
+      //  const userList=document.getElementById('userlist');
+      // const editBtn = document.getElementById('edit-btn');
+    //   editBtn.addEventListener('click', async() => {
+    //     // show all unchecked checkboxes
+    //     var isEditBtnClicked=true
+    //     var isRemoveBtnClicked=false;
+    //     user=await axios.get(`http://localhost:3000/AddNewUser?groupid=${localStorage.getItem('groupid')}`)
+    //     console.log(user);
+    //     userList.innerHTML="";
+    //       for (let index = 0; index < user.data.userDetail.length; index++) {
+          
+    //       const listItem = document.createElement('li');
+          
+    //       // create new input checkbox element
+    //       const checkbox = document.createElement('input');
+    //       checkbox.type = 'checkbox';
+    //       checkbox.name = 'user';
+    //        checkbox.value = user.data.userDetail[index].id;
+          
+    //       // create new label element
+    //       const label = document.createElement('label');
+    //       label.htmlFor = user.data.userDetail[index].id;
+    //       label.textContent = user.data.userDetail[index].username;
+          
+    //       // append checkbox and label to list item
+    //       listItem.appendChild(checkbox);
+    //       listItem.appendChild(label);
+          
+    //       // append list item to unordered list
+          
+    //       userList.appendChild(listItem);
+    // }
+    // // const e
+       
+    //   });
+
+      // const removeBtn = document.getElementById('remove-btn');
+      // removeBtn.addEventListener('click', async() => {
+      //   // show all checked checkboxes
+      //           var isRemoveBtnClicked=true;
+      //           var isEditBtnClicked=false;
+      //           user=await axios.get(`http://localhost:3000/fetchGroupUser?groupid=${localStorage.getItem('groupid')}`)
+      //           console.log(user);
+      //           userList.innerHTML="";
+      //           for (let index = 0; index < user.data.userDetail.length; index++) {
+                
+      //           const listItem = document.createElement('li');
+                
+      //           // create new input checkbox element
+      //           const checkbox = document.createElement('input');
+      //           checkbox.type = 'checkbox';
+      //           checkbox.name = 'user';
+      //           checkbox.value = user.data.userDetail[index].id;
+      //           // checkbox.checked = true
+                
+      //           // create new label element
+      //           const label = document.createElement('label');
+      //           label.htmlFor = user.data.userDetail[index].id;
+      //           label.textContent = user.data.userDetail[index].username;
+                
+      //           // append checkbox and label to list item
+      //           listItem.appendChild(checkbox);
+      //           listItem.appendChild(label);
+                
+      //           // append list item to unordered list
+                
+      //           userList.appendChild(listItem);
+      //       }
+      // });
+
+      document.getElementById('save-btn').addEventListener('click',async()=>{
+        event.preventDefault(); // Prevent the form from submitting
+  
+                // Get all the checkboxes
+        
+                     var checkboxes = document.querySelectorAll('input[type=checkbox]:checked');
+                
+                // Create an array to store the selected values
+                var selectedValues = [];
+                
+                // Loop through each checkbox and add its value to the array
+                checkboxes.forEach(function(checkbox) {
+                    selectedValues.push(parseInt(checkbox.value));
+                });
+                
+                // Do something with the selected values, like send them to a server
+                console.log(selectedValues);
+                const NewCreateGroupData={
+                         groupid:localStorage.getItem('groupid'),
+                        groupUseridArray:selectedValues
+              }
+
+              if(isEditBtnClicked===true){
+                await axios.post('http://localhost:3000/AddNewUserToGroup',NewCreateGroupData);
+              }
+              if(isRemoveBtnClicked===true)
+              {
+                await axios.put('http://localhost:3000/RemoveUserFromGroup',NewCreateGroupData);
+              }
+              if(isAdminBtnClicked===true)
+              {
+                await axios.put('http://localhost:3000/MakeAdminToUser',NewCreateGroupData);
+              }
+
+      })
+    </script>
+  </body>
+</html>

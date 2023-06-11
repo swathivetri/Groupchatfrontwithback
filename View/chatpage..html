@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Chat Application</title>
+	<link rel="stylesheet" href="chatpage.css">
+</head>
+<body>
+	
+	<div class="container">
+		<div class="left-panel">
+			<button id="create-group-button">Create Group</button>
+		</div>
+		<div class="chat-window">
+			<div class="chat-header">
+				<h2 id="username">Chat</h2>
+			</div>
+			<div class="chat-body">
+				<ul class="message-list">
+					
+					
+				</ul>
+			</div>
+			<div class="chat-footer">
+				<input type="text" placeholder="Type your message..." id="message-input">
+				<button id="send-button">Send</button>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="chatpage.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</html>

@@ -1,26 +1,32 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/users');
+var jwt = require('jsonwebtoken');
+const User = require('../models/users')
+const path=require('path');
 
-const authenticate = (req, res, next) => {
 
+
+// console.log(decoded.id);
+exports.authentication=(async(req,res,next)=>{
     try {
-        const token = req.header('Authorization');
-        console.log(token);
-        const user = jwt.verify(token, process.env.TOKEN_SECRET);
-        console.log( user.userId)
-        User.findByPk(user.userId).then(user => {
+        console.log("i am authentication");
+        const token=req.header('Authorization');
+        var decoded = jwt.verify(token, 'secretkey')
+        
+       const userdetail= await User.findByPk(decoded.userid);
+       if(userdetail===null)
+       {
+            console.log("this is not valid user");
+            // res.redirect('/View/login.htm');
+             res.status(401).send({success:false,msg:"user not found"});
+            // res.redirect('/View/login.htm'); 
 
-            req.user = user; 
-            next()
-        }).catch(err => { throw new Error(err)})
-
-      } catch(err) {
-        console.log(err);
-        return res.status(401).json({success: false})
-      }
-
-}
-
-module.exports = {
-    authenticate
-}
+       }else{
+            req.user=userdetail;
+            next();
+       }
+    } catch (error) {
+        console.log("very bad feeling");
+        res.status(401).send({success:false,msg:"user is not valid"});
+          
+        
+    }
+});
