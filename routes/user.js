@@ -10,12 +10,10 @@ const userDetail=require('../controller/userchat')
 
 
 
-router.post('/signup',userController.signup )
-
-router.post('/login',userController.login )
-
-router.get('/AddNewUser',authentication.authentication,userController.AddNewUser);
-
+router.post('/adduserdetail',userController.addUserDetail);
+router.post('/login',userController.loginUser);
 router.get('/UserDetail',authentication.authentication,userDetail.UserDetail);
+router.get('/AddNewUser',authentication.authentication,userController.AddNerUser)
+
 
 module.exports = router;

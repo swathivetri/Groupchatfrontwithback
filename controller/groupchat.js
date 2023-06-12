@@ -4,28 +4,28 @@ const messagetable=require('../models/messagetable')
  const Sequelize=require('../util/database');
   const sequelize=require('sequelize');
 const { Op } = require('sequelize');
-const User = require('../models/users');
+const usertable = require('../models/userdetailtable');
 const queryInterface = Sequelize.getQueryInterface();
 
 
 
 exports.CreateGroup=(async(req,res)=>{
   const t= await Sequelize.transaction();
-    console.log("createfgorp data"+req.body.groupname+req.body.groupUseridArray+req.user.id)
+    console.log("creategroup data"+req.body.groupname+req.body.groupUseridArray+req.user.id)
     try {
         const groupid=await grouptable.create({
             groupName:req.body.groupname,
         },{transaction:t});
     
         await usergroup.create({
-          userId: req.user.id,
+          tbluserdetailId: req.user.id,
           grouptableId:groupid.id,
           isSuperAdmin:true
         },{transaction:t})
 
         const usergroupArray = req.body.groupUseridArray.map(userId => ({
           grouptableId: groupid.id,
-          userId: userId,
+          tbluserdetailId: userId,
           createdAt: new Date(),
           updatedAt: new Date()
         }));
@@ -52,7 +52,7 @@ exports.FetchGroupName=(async (req,res)=>{
       model: usergroup,
       attributes: [],
       where: {
-        userId: `${req.user.id}`
+        tbluserdetailId: `${req.user.id}`
       },
       required: true
     }]
@@ -70,7 +70,7 @@ exports.AddGroupchatMessage=(async (req,res)=>{
     try {
    const response=await messagetable.create({
           message:req.body.message,
-          userId:req.user.id,
+          tbluserdetailId:req.user.id,
           grouptableId:req.body.groupid,
       })
       
@@ -96,7 +96,7 @@ exports.fetchGroupMessage=( async(req,res)=>{
         // id: { [Op.gt]:req.query.lastmessageid}
        },
        include: [{
-        model: User,
+        model: usertable,
         attributes: ['username']
       }]
       })      
@@ -114,7 +114,7 @@ exports.AddNewUserToGroup=(async (req,res)=>{
   for (let index = 0; index < req.body.groupUseridArray.length; index++) {
     usergroup.create({
         grouptableId:req.body.groupid,
-        userId:req.body.groupUseridArray[index]
+        tbluserdetailId:req.body.groupUseridArray[index]
     })
 }
 
@@ -124,7 +124,7 @@ exports.RemoveUserFromGroup=(async (req,res)=>{
   console.log()
     await usergroup.destroy({where:{
       grouptableId:req.body.groupid,
-      userId:req.body.groupUseridArray
+      tbluserdetailId:req.body.groupUseridArray
     }
         
     })
@@ -134,7 +134,7 @@ exports.RemoveUserFromGroup=(async (req,res)=>{
 
 exports.fetchGroupUser=(async (req,res)=>{
   console.log()
-const userDetail= await User.findAll({
+const userDetail= await usertable.findAll({
     include: [{
       model: usergroup,
       where: {
@@ -150,7 +150,7 @@ const userDetail= await User.findAll({
 
 exports.fetchGroupAdmin=(async (req, res) => {
   try {
-    const userDetail = await User.findAll({
+    const userDetail = await usertable.findAll({
       include: [{
         model: usergroup,
         where:{
@@ -175,7 +175,7 @@ exports.MakeAdminToUser=( async(req, res) => {
     for (let index = 0; index < req.body.groupUseridArray.length; index++) {
       await usergroup.update(
         { isAdmin: true },
-        { where: { userId:req.body.groupUseridArray[index],
+        { where: { tbluserdetailId:req.body.groupUseridArray[index],
                    grouptableId:req.body.groupid} 
                 });
       
@@ -191,7 +191,7 @@ exports.UserAdmin=(async (req,res) => {
   try {
       const isAdmin=await usergroup.findOne({
         where:{
-          userId:req.user.id,
+          tbluserdetailId:req.user.id,
           grouptableId:req.query.groupid
         }})
 

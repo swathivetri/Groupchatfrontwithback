@@ -11,7 +11,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const sequelize = require('./util/database');
-const User = require('./models/users');
+const usertable=require('./models/userdetailtable');
 const userchattable=require('./models/messagetable');
 const grouptable=require('./models/grouptable');
 const usergrouptbble=require('./models/usergroup');
@@ -38,19 +38,19 @@ app.use(messageRoutes);
 app.use(groupRoutes);
 
 
-User.hasMany(userchattable);
-userchattable.belongsTo(User);
+usertable.hasMany(userchattable);
+userchattable.belongsTo(usertable);
 
 grouptable.hasMany(userchattable);
 userchattable.belongsTo(grouptable);
 
 
 
-User.belongsToMany(grouptable,{ through: usergrouptbble });
-grouptable.belongsToMany(User, { through: usergrouptbble });
+usertable.belongsToMany(grouptable,{ through: usergrouptbble });
+grouptable.belongsToMany(usertable, { through: usergrouptbble });
 
 grouptable.hasMany(usergrouptbble);
-User.hasMany(usergrouptbble);
+usertable.hasMany(usergrouptbble);
 
 
 sequelize.sync()

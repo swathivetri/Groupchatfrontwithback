@@ -1,5 +1,5 @@
 var jwt = require('jsonwebtoken');
-const User = require('../models/users')
+const usertable=require('../models/userdetailtable')
 const path=require('path');
 
 
@@ -9,9 +9,9 @@ exports.authentication=(async(req,res,next)=>{
     try {
         console.log("i am authentication");
         const token=req.header('Authorization');
-        var decoded = jwt.verify(token, 'secretkey')
+        var decoded = jwt.verify(token, process.env.TOKEN_SECRET)
         
-       const userdetail= await User.findByPk(decoded.userid);
+       const userdetail= await usertable.findByPk(decoded.userid);
        if(userdetail===null)
        {
             console.log("this is not valid user");

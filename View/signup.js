@@ -1,26 +1,38 @@
-async function signup(e) {
-    try{
-        e.preventDefault();
-        console.log(e.target.email.value);
+const name=document.getElementById('name');
+const email=document.getElementById('email');
+const mobile=document.getElementById('mobile');
+const password=document.getElementById('pwd');
 
-        const signupDetails = {
-            name: e.target.name.value,
-            email: e.target.email.value,
-            number: e.target.number.value,
-            password: e.target.password.value
-
-           
-
-        }
-        console.log(signupDetails)
-        const response  = await axios.post('http://localhost:3000/user/signup',signupDetails)
-            if(response.status === 201){
-                window.location.href = "../View/login.html" 
-            } else {
-                throw new Error('Failed to login')
+ async function AddUser(event)
+{
+    event.preventDefault();
+    console.log(name.value);
+    try {
+            if(name.value.trim()!="" && email.value.trim()!="" && email.value.trim()!="" && password.value.trim()!="" ){
+            const UserData={
+                name:name.value,
+                email:email.value,
+                mobile:mobile.value,
+                password:password.value
             }
             
-    }catch(err){
-        document.body.innerHTML += `<div style="color:red;">${err} <div>`;
-    }
+                const response= await axios.post("http://localhost:3000/user/adduserdetail",UserData);
+
+                if(response.data.success===true)
+                { 
+                    alert("Insert  successfully");
+                    window.location.href = "../View/login.html" 
+                   
+                }else {
+                    alert("Email id Exists");
+
+                }
+            }else{
+                alert("Might be some Field are empty");
+            }
+                // if(response.data)
+                //  console.log(name.value);
+      } catch (error) {
+            console.log(error);
+    }   
 }

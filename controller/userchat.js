@@ -1,6 +1,6 @@
 const { Sequelize } = require('sequelize');
 const chattable=require('../models/messagetable');
-const user=require('../models/users');
+const Tbluserdetails=require('../models/userdetailtable');
 const { Op } = require('sequelize'); 
 
 
@@ -12,7 +12,7 @@ exports.fetchChat=( async(req,res)=>{
       try {
         const userchat= await chattable.findAll({
           include: [{
-            model: user,
+            model: Tbluserdetails,
             attributes: ['username']
           }]
         })
@@ -27,9 +27,9 @@ exports.fetchChat=( async(req,res)=>{
 exports.Adduserchat=(async (req,res)=>{
     console.log(req.body.message);
     try {
-   const response = await chattable.create({
+   const response=await chattable.create({
           message:req.body.message,
-          userId:req.user.id
+          tbluserdetailId:req.user.id
       })
       
       res.send({success:true,msg:"successfull inserted"})
@@ -47,7 +47,7 @@ exports.fetchNewMessge=(async (req,res)=>{
               id: { [Sequelize.Op.gt]:req.query.lastmessageid}
             },
             include: [{
-              model: user,
+              model: Tbluserdetails,
               attributes: ['username']
             }]
           })
@@ -65,7 +65,7 @@ exports.UserDetail=( async(req,res)=>{
   //   attributes: ['message']
   // });
   try {
-    const userDetail= await user.findAll({
+    const userDetail= await Tbluserdetails.findAll({
       where: {
         id: {
           [Op.ne]: `${req.user.id}`

@@ -15,7 +15,7 @@ const groupnameInput=document.getElementById('group-name');
 // Toggle modal when Create Group button is clicked
 createGroupBtn.addEventListener('click',() => {
   const token=localStorage.getItem('token');
-         axios.get("http://localhost:3000/UserDetail?",{
+         axios.get("http://localhost:3000/user/UserDetail?",{
           headers: {
             'Authorization':token
           }
@@ -313,12 +313,12 @@ console.log(error);
 
 }
 
-(function () {
-  const userdetail = parseJwt(localStorage.getItem('token'));
-  console.log(userdetail);
-  uname = userdetail.username;
-  userid = userdetail.userid;
-  console.log('userid' + userid);
+(function(){
+const userdetail= parseJwt (localStorage.getItem('token'));
+console.log(userdetail);
+uname=userdetail.username;
+userid=userdetail.userid;
+console.log('userid'+userid);
   //document.getElementById('username').innerText=userdetail.username;
 }())
 

@@ -153,7 +153,7 @@ function addMessageOnScreen(message)
               </div>`;
             newMessage.style.textAlign = "right";
          }else{
-                console.log("jello swathi");
+                console.log("Hello swathi");
                 newMessage.innerHTML = `
                 <div class="message-sender">
                   <span>${message.data.userchat[index].tbluserdetail.username}</span>
